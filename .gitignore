@@ -1,0 +1,18 @@
+# .NET test build output
+bin/
+obj/
+TestResults/
+*.user
+
+# Unity project folders, if the package is opened as a project (e.g. by CI)
+Library/
+Temp/
+Logs/
+UserSettings/
+artifacts/
+
+# Editors and OS
+.vs/
+.vscode/
+.idea/
+.DS_Store
