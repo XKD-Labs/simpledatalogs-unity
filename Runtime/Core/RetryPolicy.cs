@@ -24,7 +24,7 @@ namespace XKDLabs.SimpleDataLogs.Core
         /// <summary>Every later re-probe while the key keeps answering 401.</summary>
         public double InvalidKeyProbeIntervalSeconds { get; set; } = 600;
 
-        /// <summary>The jitter-free ceiling after this many failures in a row: 1 s, 2 s, 4 s … 5 min.</summary>
+        /// <summary>The jitter-free ceiling after this many failures in a row: 1 s, 2 s, 4 s ... 5 min.</summary>
         public double BackoffCeilingSeconds(int failureCount)
         {
             // Cap the exponent so the doubling can never overflow.

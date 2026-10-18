@@ -8,7 +8,7 @@ namespace XKDLabs.SimpleDataLogs.Core
     /// <summary>Reads a flat JSON object of strings, numbers and booleans; enough for the SDK's own state files.</summary>
     internal static class FlatJsonReader
     {
-        /// <summary>Parses <c>{"key":value,…}</c> into raw values (string, double or bool); returns false on anything else.</summary>
+        /// <summary>Parses <c>{"key":value,...}</c> into raw values (string, double or bool); returns false on anything else.</summary>
         public static bool TryParse(string jsonText, out Dictionary<string, object> values)
         {
             values = new Dictionary<string, object>(StringComparer.Ordinal);
