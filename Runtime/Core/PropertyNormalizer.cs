@@ -7,9 +7,7 @@ namespace XKDLabs.SimpleDataLogs.Core
     /// <summary>Turns loosely typed properties into the four JSON kinds ingest accepts, dropping the rest with a log line.</summary>
     internal static class PropertyNormalizer
     {
-        /// <summary>
-        /// Copies the supported properties: strings, booleans, integers (as long or ulong) and finite floating-point numbers (as double).
-        /// </summary>
+        /// <summary>Copies the supported properties: strings, booleans, integers (as long or ulong) and finite numbers (as double).</summary>
         public static Dictionary<string, object> Normalize(IDictionary<string, object> rawProperties, string eventName)
         {
             var normalizedProperties = new Dictionary<string, object>(StringComparer.Ordinal);
