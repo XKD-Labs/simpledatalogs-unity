@@ -1,0 +1,26 @@
+<!-- Type-checks Runtime/, the sample and the Unity test assemblies against minimal UnityEngine stubs; nothing here runs. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DefineConstants>$(DefineConstants);UNITY_5_3_OR_NEWER;UNITY_2021_3_OR_NEWER</DefineConstants>
+    <AssemblyName>XKDLabs.SimpleDataLogs</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="UnityEngineStubs.cs" />
+    <Compile Include="../../../Runtime/**/*.cs" />
+    <Compile Include="../../../Samples~/**/*.cs" />
+    <Compile Include="../../../Tests/Editor/**/*.cs" />
+    <Compile Include="../../../Tests/Runtime/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.14.0" />
+  </ItemGroup>
+
+</Project>

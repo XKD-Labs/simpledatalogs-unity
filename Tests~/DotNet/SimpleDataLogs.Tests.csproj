@@ -1,0 +1,31 @@
+<!-- NUnit tests for the pure C# core; compiles Runtime/Core directly, so no Unity is needed. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AssemblyName>XKDLabs.SimpleDataLogs.DotNetTests</AssemblyName>
+    <RootNamespace>XKDLabs.SimpleDataLogs.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../../Runtime/Core/**/*.cs" />
+    <Compile Include="Tests/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+  </ItemGroup>
+
+  <!-- Building the tests also type-checks the core at C# 9 / netstandard2.1 and the Unity layer against API stubs. -->
+  <ItemGroup>
+    <ProjectReference Include="CoreCompat/CoreCompat.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="UnityLayerCompile/UnityLayerCompile.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+</Project>
