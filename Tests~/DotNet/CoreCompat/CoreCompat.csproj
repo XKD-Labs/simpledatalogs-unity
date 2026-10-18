@@ -1,0 +1,18 @@
+<!-- Compiles Runtime/Core alone against .NET Standard 2.1 with C# 9, the floor Unity 2021.3 offers. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>XKDLabs.SimpleDataLogs.CoreCompat</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../../../Runtime/Core/**/*.cs" />
+  </ItemGroup>
+
+</Project>
