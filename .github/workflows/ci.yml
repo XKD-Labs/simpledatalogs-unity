@@ -1,0 +1,61 @@
+# Tests the pure C# core with .NET and checks the Unity package layout on every push and pull request.
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  dotnet:
+    runs-on: ubuntu-24.04
+
+    steps:
+      # actions/checkout v7.0.1, pinned by commit.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      # actions/setup-dotnet v6.0.0, pinned by commit.
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: 8.0.414
+
+      # Core tests, the C# 9 / .NET Standard 2.1 compile and the Unity-stub type check.
+      - name: Test
+        run: dotnet test "Tests~/DotNet" --configuration Release
+
+      # Every file and folder Unity imports needs a .meta with a unique GUID.
+      - name: Check meta files
+        run: python3 .github/scripts/unity_meta.py check
+
+  # Runs the Unity Test Framework tests in a real editor. Needs setup before it runs:
+  #   1. Activate a Unity license for GameCI (https://game.ci/docs/github/activation).
+  #   2. Add the repository secrets UNITY_LICENSE, UNITY_EMAIL and UNITY_PASSWORD.
+  #   3. Set the repository variable ENABLE_UNITY_TESTS to "true".
+  unity:
+    if: ${{ vars.ENABLE_UNITY_TESTS == 'true' }}
+    runs-on: ubuntu-24.04
+
+    steps:
+      # actions/checkout v7.0.1, pinned by commit.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      # game-ci/unity-test-runner v4.4.0, pinned by commit; package mode builds a throwaway project around the package.
+      - uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          packageMode: true
+          projectPath: .
+          unityVersion: 2021.3.45f1
+          testMode: all
+          githubToken: ${{ secrets.GITHUB_TOKEN }}

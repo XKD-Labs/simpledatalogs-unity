@@ -1,0 +1,59 @@
+# Creates the GitHub release when a tag v<version> is pushed; OpenUPM picks up new tags by itself.
+name: Publish
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-*"
+
+# Creating a release needs write access to the repository contents; nothing else.
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+
+    steps:
+      # actions/checkout v7.0.1, pinned by commit.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      # The tag must match package.json, so a mistyped tag never ships.
+      - name: Check the tag matches the version
+        run: |
+          package_version="$(jq -r .version package.json)"
+          if [ "v$package_version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $package_version" >&2
+            exit 1
+          fi
+
+      # actions/setup-dotnet v6.0.0, pinned by commit.
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: 8.0.414
+
+      - name: Test
+        run: dotnet test "Tests~/DotNet" --configuration Release
+
+      - name: Check meta files
+        run: python3 .github/scripts/unity_meta.py check
+
+      # The release notes are this version's CHANGELOG section; prereleases (v0.2.0-beta.1) are marked as such.
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          package_version="${GITHUB_REF_NAME#v}"
+          awk -v version="$package_version" '
+            $0 ~ "^## \\[" version "\\]" { is_in_section = 1; next }
+            is_in_section && /^## \[/ { exit }
+            is_in_section { print }
+          ' CHANGELOG.md > release-notes.md
+
+          prerelease_flag=""
+          case "$package_version" in *-*) prerelease_flag="--prerelease" ;; esac
+
+          gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file release-notes.md $prerelease_flag
