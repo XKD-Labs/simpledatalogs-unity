@@ -1,0 +1,37 @@
+{
+  "name": "com.xkdlabs.simpledatalogs",
+  "version": "0.1.0",
+  "displayName": "simpledatalogs",
+  "description": "Track events from Unity games and apps and see them as counters and charts on simpledatalogs.com. Crash-safe disk outbox, batching, retries and opt-in autocapture of launches, sessions, scene views and errors. No dependencies; works with IL2CPP and WebGL.",
+  "unity": "2021.3",
+  "license": "MIT",
+  "keywords": [
+    "analytics",
+    "events",
+    "telemetry",
+    "logging",
+    "simpledatalogs"
+  ],
+  "author": {
+    "name": "XKD Labs",
+    "email": "mail@xkdlabs.com",
+    "url": "https://simpledatalogs.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XKD-Labs/simpledatalogs-unity.git"
+  },
+  "documentationUrl": "https://simpledatalogs.com/docs/sdks/unity",
+  "changelogUrl": "https://github.com/XKD-Labs/simpledatalogs-unity/blob/main/CHANGELOG.md",
+  "licensesUrl": "https://github.com/XKD-Labs/simpledatalogs-unity/blob/main/LICENSE",
+  "dependencies": {
+    "com.unity.modules.unitywebrequest": "1.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "Quick start",
+      "description": "Configures the SDK at launch and tracks level, purchase and tutorial events.",
+      "path": "Samples~/QuickStart"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+    "name": "XKDLabs.SimpleDataLogs.Tests",
+    "rootNamespace": "XKDLabs.SimpleDataLogs.Tests",
+    "references": [
+        "XKDLabs.SimpleDataLogs",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
