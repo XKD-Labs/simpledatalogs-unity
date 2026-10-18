@@ -299,6 +299,9 @@ namespace XKDLabs.SimpleDataLogs
         // Runs one public call under the lock; any failure is logged, never thrown into the game.
         private static void RunSafely(string operationName, Action operation)
         {
+            // Console lines wait until the call returns, so log handlers that call the SDK never re-enter it.
+            UnityLogSink.BeginHold();
+
             try
             {
                 lock (SyncRoot)
@@ -309,6 +312,10 @@ namespace XKDLabs.SimpleDataLogs
             catch (Exception operationError)
             {
                 SdkLog.Error($"{operationName} failed: {operationError.Message}");
+            }
+            finally
+            {
+                UnityLogSink.EndHold();
             }
         }
     }
