@@ -11,6 +11,8 @@ The Unity SDK for [simpledatalogs](https://simpledatalogs.com): track events fro
 
 - **Git URL:** Window → Package Manager → **+** → "Add package from git URL…", then enter:
 
+Early access: the `v0.1.0` tag and the OpenUPM listing come with the first release. Until then, use the git URL without `#v0.1.0`.
+
   ```
   https://github.com/XKD-Labs/simpledatalogs-unity.git#v0.1.0
   ```

@@ -13,6 +13,8 @@ The `com.xkdlabs.simpledatalogs` package tracks events from Unity games and apps
 
 In Unity, open **Window → Package Manager**, click **+**, choose **Add package from git URL…** and enter:
 
+Early access: the `v0.1.0` tag and the OpenUPM listing come with the first release. Until then, use the git URL without `#v0.1.0`.
+
 ```
 https://github.com/XKD-Labs/simpledatalogs-unity.git#v0.1.0
 ```
