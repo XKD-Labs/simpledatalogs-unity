@@ -100,6 +100,9 @@ namespace UnityEngine
     public static class Debug
     {
         /// <summary>Stub.</summary>
+        public static bool isDebugBuild => true;
+
+        /// <summary>Stub.</summary>
         public static void Log(object message)
         {
         }

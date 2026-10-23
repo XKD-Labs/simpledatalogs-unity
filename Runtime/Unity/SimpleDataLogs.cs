@@ -176,6 +176,7 @@ namespace XKDLabs.SimpleDataLogs
                 StorageDirectory = storageDirectory ?? Path.Combine(Application.persistentDataPath, StorageFolderName),
                 UserAgent = IsWebGlPlayer ? null : SdkInfo.UserAgent,
                 ShouldGzip = !IsWebGlPlayer,
+                BatchInterval = PipelineOptions.BatchIntervalFor(Debug.isDebugBuild),
             };
 
             if (!Client.Configure(options, transport ?? new UnityWebRequestTransport(), autocapture))

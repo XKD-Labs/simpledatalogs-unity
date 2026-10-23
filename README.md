@@ -127,7 +127,7 @@ The opt-out is not persisted by the SDK; your game's own setting is the source o
 
 ## How it behaves
 
-- **Batching.** Events go out in batches of 50, or 30 s after the first event of a partial batch. Every request is under 256 KB, and bodies of 1 KB or more are gzipped (except on WebGL, where the browser handles encoding).
+- **Batching.** Events go out in batches of 50, or after the first event of a partial batch has waited 10 s (5 s in the Editor and development builds). Every request is under 256 KB, and bodies of 1 KB or more are gzipped (except on WebGL, where the browser handles encoding).
 - **Crash-safe outbox.** Each event is appended to a journal on disk as it is tracked.
   - Batches are sealed into files and deleted only after a `202`.
   - The next launch resends anything left over, including a journal cut short by a crash.

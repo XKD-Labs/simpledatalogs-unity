@@ -12,6 +12,15 @@ namespace XKDLabs.SimpleDataLogs.Tests
     [TestFixture]
     public sealed class EventPipelineTests
     {
+        /// <summary>Development builds wait 5 s for a partial batch, release builds 10 s, and that is the default.</summary>
+        [Test]
+        public void DevelopmentBuildsWaitFiveSecondsAndReleaseTen()
+        {
+            Assert.That(PipelineOptions.BatchIntervalFor(isDevelopmentBuild: true), Is.EqualTo(TimeSpan.FromSeconds(5)));
+            Assert.That(PipelineOptions.BatchIntervalFor(isDevelopmentBuild: false), Is.EqualTo(TimeSpan.FromSeconds(10)));
+            Assert.That(new PipelineOptions().BatchInterval, Is.EqualTo(TimeSpan.FromSeconds(10)));
+        }
+
         /// <summary>The outbox folder for each test.</summary>
         private TemporaryDirectory storage;
 
@@ -50,7 +59,7 @@ namespace XKDLabs.SimpleDataLogs.Tests
             EventPipeline pipeline = MakePipeline();
             pipeline.Track(TestKit.MakeEvent("tap", clock.UtcNow), clock.UtcNow);
 
-            clock.Advance(TimeSpan.FromSeconds(29));
+            clock.Advance(TimeSpan.FromSeconds(9));
             pipeline.Tick(clock.UtcNow);
             Assert.That(transport.Requests, Is.Empty);
 

@@ -23,8 +23,14 @@ namespace XKDLabs.SimpleDataLogs.Core
         /// <summary>Seal and send as soon as the journal holds this many events.</summary>
         public int MaxBatchEventCount { get; set; } = 50;
 
-        /// <summary>Seal a partial batch this long after its first event.</summary>
-        public TimeSpan BatchInterval { get; set; } = TimeSpan.FromSeconds(30);
+        /// <summary>Seal a partial batch this long after its first event: 10 s in release, 5 s in development builds.</summary>
+        public TimeSpan BatchInterval { get; set; } = BatchIntervalFor(isDevelopmentBuild: false);
+
+        /// <summary>5 s in the Editor and development builds, so new events show within seconds; 10 s in release.</summary>
+        public static TimeSpan BatchIntervalFor(bool isDevelopmentBuild)
+        {
+            return TimeSpan.FromSeconds(isDevelopmentBuild ? 5 : 10);
+        }
 
         /// <summary>The largest request body ever sent, uncompressed, including newlines.</summary>
         public int MaxRequestBytes { get; set; } = 256000;
