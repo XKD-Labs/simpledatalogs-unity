@@ -38,6 +38,9 @@ namespace XKDLabs.SimpleDataLogs
         /// <summary>The thread Configure ran on, the only one allowed to start web requests.</summary>
         private static int mainThreadId = -1;
 
+        /// <summary>True when events carry app_state and engaged_ms, as Configure asked.</summary>
+        private static bool shouldReportActivity;
+
         /// <summary>The scene already sent at Configure, so its own sceneLoaded is not sent twice.</summary>
         private static int? initialSceneHandle;
 
@@ -69,9 +72,9 @@ namespace XKDLabs.SimpleDataLogs
         }
 
         /// <summary>Starts the SDK; call once on the main thread at launch, after SetEnabled if the user may have opted out.</summary>
-        public static void Configure(string ingestKey, string endpoint = DefaultEndpoint, AutocaptureOptions autocapture = AutocaptureOptions.None)
+        public static void Configure(string ingestKey, string endpoint = DefaultEndpoint, AutocaptureOptions autocapture = AutocaptureOptions.None, bool reportsActivity = true)
         {
-            RunSafely("Configure", () => ConfigureWith(ingestKey, endpoint, autocapture, null, null));
+            RunSafely("Configure", () => ConfigureWith(ingestKey, endpoint, autocapture, null, null, reportsActivity));
         }
 
         /// <summary>Records one event; <c>event_id</c> and <c>ts</c> are stamped now. Values: string, integer, float, double or bool.</summary>
@@ -160,7 +163,7 @@ namespace XKDLabs.SimpleDataLogs
         }
 
         // Builds the pipeline options for this platform, starts the client, then the Unity hooks.
-        private static void ConfigureWith(string ingestKey, string endpoint, AutocaptureOptions autocapture, string storageDirectory, IIngestTransport transport)
+        private static void ConfigureWith(string ingestKey, string endpoint, AutocaptureOptions autocapture, string storageDirectory, IIngestTransport transport, bool reportsActivity = true)
         {
             // SDK lines go to the Unity console unless a test set its own sink.
             if (SdkLog.Sink == null)
@@ -185,6 +188,14 @@ namespace XKDLabs.SimpleDataLogs
             }
 
             mainThreadId = Thread.CurrentThread.ManagedThreadId;
+
+            // Events say whether someone is playing; a game starts in front, and pause and focus move it.
+            shouldReportActivity = reportsActivity;
+            if (shouldReportActivity)
+            {
+                Client.SetAppActive(true);
+            }
+
             StartUnityHooks(autocapture);
         }
 
@@ -281,6 +292,11 @@ namespace XKDLabs.SimpleDataLogs
         // Feeds an active or background moment to sessions; going to the background also flushes.
         private static void HandleActivityChange(bool isActive)
         {
+            if (shouldReportActivity)
+            {
+                Client.SetAppActive(isActive);
+            }
+
             if (isActive)
             {
                 Client.AppBecameActive();

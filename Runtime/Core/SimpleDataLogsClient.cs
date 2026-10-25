@@ -34,6 +34,9 @@ namespace XKDLabs.SimpleDataLogs.Core
         /// <summary>Properties merged into every event's props.</summary>
         private Dictionary<string, object> defaultProperties = new Dictionary<string, object>(StringComparer.Ordinal);
 
+        /// <summary>The app's foreground time between events, once the Unity layer reports the app's state.</summary>
+        private ActivityTracker activityTracker;
+
         /// <summary>The session state machine, when session autocapture is on.</summary>
         private SessionTracker sessionTracker;
 
@@ -109,9 +112,11 @@ namespace XKDLabs.SimpleDataLogs.Core
                 return;
             }
 
-            // Drop unsupported values, then let the call site win over the defaults.
+            // Drop unsupported values, then let the call site win over app_state and the defaults.
             Dictionary<string, object> eventProperties = PropertyNormalizer.Normalize(properties, eventName);
-            JournalEvent(eventName, PropertyNormalizer.Merge(defaultProperties, eventProperties), utcNow(), SessionId);
+            DateTime occurredAtUtc = utcNow();
+            Dictionary<string, object> stampedDefaults = activityTracker == null ? defaultProperties : PropertyNormalizer.Merge(defaultProperties, activityTracker.Stamp(occurredAtUtc));
+            JournalEvent(eventName, PropertyNormalizer.Merge(stampedDefaults, eventProperties), occurredAtUtc, SessionId);
         }
 
         /// <summary>Records <c>screen_view</c> with a <c>screen</c> prop.</summary>
@@ -161,6 +166,18 @@ namespace XKDLabs.SimpleDataLogs.Core
         public void Tick()
         {
             Pipeline?.Tick(utcNow());
+        }
+
+        /// <summary>The app came to the front or left it; the first call turns on <c>app_state</c> and <c>engaged_ms</c>.</summary>
+        public void SetAppActive(bool isActive)
+        {
+            if (activityTracker == null)
+            {
+                activityTracker = new ActivityTracker(isActive, utcNow());
+                return;
+            }
+
+            activityTracker.SetActive(isActive, utcNow());
         }
 
         /// <summary>The app became active: may end a stale session and start a new one.</summary>

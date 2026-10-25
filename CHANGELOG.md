@@ -9,6 +9,7 @@ The first public release.
 ### Added
 
 - `SimpleDataLogs.Configure`, `Track`, `TrackScreen`, `SetDeviceId`, `SetDefaultProperties`, `SetEnabled` and `Flush` for Unity 2021.3+, on Mono and IL2CPP, including WebGL.
+- Every event tracked now carries `app_state` (`active` while the game is unpaused and focused, else `background`) and, while active, `engaged_ms`, so dashboards can split active and passive sessions. `reportsActivity: false` on `Configure` turns it off.
 - A partial batch goes out 10 s after its first event, or 5 s in the Editor and development builds, so new events show within seconds.
 - A pure C# core with a hand-written JSON encoder: no reflection, no dependencies.
 - A crash-safe disk outbox under `Application.persistentDataPath`, with batching, gzip, retries with jittered backoff, `Retry-After`, 401 pauses, 413 splitting and 415 set-asides.

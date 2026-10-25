@@ -82,6 +82,15 @@ SimpleDataLogs.TrackScreen("Shop");
 
 Property values are strings, integers, floats, doubles or booleans. Anything else (null, lists, dictionaries, objects, NaN, infinity) is dropped with a console line.
 
+## Active and background
+
+Every event tracked now says whether someone was playing, so the Sessions tab can tell active sessions from passive ones:
+
+- `app_state` is `active` while the game is unpaused and focused, else `background`.
+- `engaged_ms` is the time in front since the previous event.
+- Mark background work yourself with `SimpleDataLogs.Track("sync_finished", new Dictionary<string, object> { ["app_state"] = "background" })`; your value wins.
+- Turn it off with `SimpleDataLogs.Configure(key, reportsActivity: false)`.
+
 ## Autocapture
 
 One argument sends launches, sessions, scene views and errors without any `Track` call. It is off until you pass it.
