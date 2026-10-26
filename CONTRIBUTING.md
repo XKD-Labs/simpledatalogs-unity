@@ -60,4 +60,4 @@ GUIDs are derived from the path, so they are stable.
 
 ## Releases
 
-Bump `version` in `package.json`, move the changelog entry under the new version, and push a tag `v<version>`. The publish workflow checks the tag against `package.json` and creates the GitHub release; OpenUPM picks up the tag by itself.
+Bump `version` in `package.json` and move the changelog entry under the new version. Run the tests and `python3 .github/scripts/unity_meta.py check` locally, then push a tag `v<version>`; OpenUPM picks up the tag by itself. Nothing runs on GitHub; a GitHub release with the changelog section is optional and made by hand.
